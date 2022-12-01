@@ -1,0 +1,15 @@
+{
+	"project": {
+		"name":"file-xml",
+		"type":"xyo-cpp-project",
+		"make" : "lib-and-dll",
+		"SPDX-License-Identifier": "MIT",
+		"sourcePath" : "XYO/FileXML",
+		"testSource" : [
+			"test.01"
+		],
+		"dependency" : [
+			"xyo-system"
+		]
+	}
+}

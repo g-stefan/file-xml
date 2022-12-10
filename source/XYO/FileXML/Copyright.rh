@@ -7,10 +7,9 @@
 #ifndef XYO_FILEXML_COPYRIGHT_RH
 #define XYO_FILEXML_COPYRIGHT_RH
 
-#define XYO_FILEXML_COPYRIGHT "Copyright (c) 2022 Grigore Stefan"
+#define XYO_FILEXML_COPYRIGHT "Copyright (c) 2022 Grigore Stefan <g_stefan@yahoo.com>"
 #define XYO_FILEXML_PUBLISHER "Grigore Stefan"
 #define XYO_FILEXML_COMPANY XYO_FILEXML_PUBLISHER
 #define XYO_FILEXML_CONTACT "g_stefan@yahoo.com"
-#define XYO_FILEXML_FULL_COPYRIGHT XYO_FILEXML_COPYRIGHT " <" XYO_FILEXML_CONTACT ">"
 
 #endif

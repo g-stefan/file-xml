@@ -16,7 +16,6 @@ namespace XYO::FileXML::Copyright {
 	XYO_FILEXML_EXPORT const char *publisher();
 	XYO_FILEXML_EXPORT const char *company();
 	XYO_FILEXML_EXPORT const char *contact();
-	XYO_FILEXML_EXPORT const char *fullCopyright();
 };
 
 #endif

@@ -13,8 +13,7 @@
 
 namespace XYO::FileXML::License {
 
-	XYO_FILEXML_EXPORT const char *licenseHeader();
-	XYO_FILEXML_EXPORT const char *licenseBody();
+	XYO_FILEXML_EXPORT const char *license();
 	XYO_FILEXML_EXPORT const char *shortLicense();
 
 };

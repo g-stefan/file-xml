@@ -10,6 +10,8 @@
 		],
 		"dependency" : [
 			"xyo-system"
-		]
+		],
+		"hasRelease" : true,
+		"githubRelease" : true
 	}
 }

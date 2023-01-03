@@ -1,17 +1,22 @@
 {
-	"project": {
-		"name":"file-xml",
-		"type":"xyo-cpp",
-		"make" : "lib-and-dll",
-		"SPDX-License-Identifier": "MIT",
-		"sourcePath" : "XYO/FileXML",
-		"testSource" : [
-			"test.01"
+	"solution": {
+		"name" : "file-xml",
+		"type" : "xyo-cpp",
+		"projects": [
+			{
+				"name" : "file-xml",
+				"make" : "lib-and-dll",
+				"SPDX-License-Identifier": "MIT",
+				"sourcePath" : "XYO/FileXML",
+				"testSource" : [
+					"test.01"
+				],
+				"dependency" : [
+					"xyo-system"
+				]
+			}
 		],
-		"dependency" : [
-			"xyo-system"
-		],
-		"hasRelease" : true,
-		"githubRelease" : true
+		"hasGithub" : true
 	}
 }
+

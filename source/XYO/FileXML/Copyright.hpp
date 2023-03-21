@@ -12,10 +12,10 @@
 #endif
 
 namespace XYO::FileXML::Copyright {
-	XYO_FILEXML_EXPORT const char *copyright();
-	XYO_FILEXML_EXPORT const char *publisher();
-	XYO_FILEXML_EXPORT const char *company();
-	XYO_FILEXML_EXPORT const char *contact();
+	XYO_FILEXML_EXPORT std::string copyright();
+	XYO_FILEXML_EXPORT std::string publisher();
+	XYO_FILEXML_EXPORT std::string company();
+	XYO_FILEXML_EXPORT std::string contact();
 };
 
 #endif

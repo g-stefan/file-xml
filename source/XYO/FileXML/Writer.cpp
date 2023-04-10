@@ -82,14 +82,14 @@ namespace XYO::FileXML {
 
 	bool Writer::indentationIsEmpty(String &value) {
 		if ((mode == Mode::Indentation4Spaces) || (mode == Mode::IndentationTab)) {
-			return ((StringX::trimAscii(value)).isEmpty());
+			return ((value.trimAscii()).isEmpty());
 		};
 		return false;
 	};
 
 	bool Writer::writeIndentationMinified(String &value) {
 		if ((mode == Mode::Indentation4Spaces) || (mode == Mode::IndentationTab) || (mode == Mode::Minified)) {
-			String tmp = StringX::trimAscii(value);
+			String tmp = value.trimAscii();
 			if (!tmp.isEmpty()) {
 				if (!write(tmp)) {
 					return false;

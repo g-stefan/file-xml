@@ -388,7 +388,7 @@ namespace XYO::FileXML {
 			};
 
 			if (mode == Mode::Minified) {
-				String tmp = StringX::trimAscii(node->name);
+				String tmp = node->name.trimAscii();
 				if (!tmp.isEmpty()) {
 					node->name = tmp;
 					document.add(node);

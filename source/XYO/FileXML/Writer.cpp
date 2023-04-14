@@ -13,7 +13,7 @@ namespace XYO::FileXML {
 			Mode mode;
 
 			inline bool write(const String &value) {
-				return StreamX::write(*iWrite, value);
+				return Stream::write(*iWrite, value);
 			};
 
 			bool writeIndentationBegin(int level);

@@ -25,7 +25,7 @@ namespace XYO::FileXML {
 	};
 
 	class Node : public Object {
-			XYO_DISALLOW_COPY_ASSIGN_MOVE(Node);
+			XYO_PLATFORM_DISALLOW_COPY_ASSIGN_MOVE(Node);
 
 		public:
 			typedef TDynamicArray<TPointer<Attribute>, 3> Attributes;

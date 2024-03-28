@@ -14,7 +14,7 @@
 namespace XYO::FileXML {
 
 	class Attribute : public Object {
-			XYO_DISALLOW_COPY_ASSIGN_MOVE(Attribute);
+			XYO_PLATFORM_DISALLOW_COPY_ASSIGN_MOVE(Attribute);
 
 		public:
 			String name;

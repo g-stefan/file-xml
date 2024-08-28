@@ -24,6 +24,10 @@
 #else
 #	define XYO_FILEXML_EXPORT XYO_PLATFORM_LIBRARY_IMPORT
 #endif
+#ifdef XYO_FILEXML_LIBRARY
+#	undef XYO_FILEXML_EXPORT
+#	define XYO_FILEXML_EXPORT
+#endif
 
 // --
 

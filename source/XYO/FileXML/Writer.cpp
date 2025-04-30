@@ -1,7 +1,7 @@
 // File XML
-// Copyright (c) 2016-2024 Grigore Stefan <g_stefan@yahoo.com>
+// Copyright (c) 2016-2025 Grigore Stefan <g_stefan@yahoo.com>
 // MIT License (MIT) <http://opensource.org/licenses/MIT>
-// SPDX-FileCopyrightText: 2016-2024 Grigore Stefan <g_stefan@yahoo.com>
+// SPDX-FileCopyrightText: 2016-2025 Grigore Stefan <g_stefan@yahoo.com>
 // SPDX-License-Identifier: MIT
 
 #include <XYO/FileXML/Writer.hpp>
@@ -82,14 +82,14 @@ namespace XYO::FileXML {
 
 	bool Writer::indentationIsEmpty(String &value) {
 		if ((mode == Mode::Indentation4Spaces) || (mode == Mode::IndentationTab)) {
-			return ((value.trimAscii()).isEmpty());
+			return ((value.trimASCII()).isEmpty());
 		};
 		return false;
 	};
 
 	bool Writer::writeIndentationMinified(String &value) {
 		if ((mode == Mode::Indentation4Spaces) || (mode == Mode::IndentationTab) || (mode == Mode::Minified)) {
-			String tmp = value.trimAscii();
+			String tmp = value.trimASCII();
 			if (!tmp.isEmpty()) {
 				if (!write(tmp)) {
 					return false;

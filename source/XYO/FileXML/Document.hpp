@@ -7,7 +7,7 @@
 #ifndef XYO_FILEXML_DOCUMENT_HPP
 #define XYO_FILEXML_DOCUMENT_HPP
 
-#ifndef XYO_FILEXML_Node_HPP
+#ifndef XYO_FILEXML_NODE_HPP
 #	include <XYO/FileXML/Node.hpp>
 #endif
 
@@ -28,6 +28,7 @@ namespace XYO::FileXML {
 
 			static inline void initMemory() {
 				TMemory<Node>::initMemory();
+				TPointerX<Branch>::initMemory();
 			};
 
 			TPointerX<Branch> root;

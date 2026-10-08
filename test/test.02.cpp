@@ -9,19 +9,10 @@ using namespace XYO::FileXML;
 
 void test() {
 	TPointer<Document> xml;	
-	if(!load("../../input/test.01.xml",xml)){
+	if(!load("../../input/test.02.xml",xml)){
 		throw std::runtime_error("File load");
 	};
-	if(!save("test.01.normal.xml",xml,Mode::Normal)){
-		throw std::runtime_error("File save");
-	};
-	if(!save("test.01.minified.xml",xml,Mode::Minified)){
-		throw std::runtime_error("File save");
-	};
-	if(!save("test.01.indentation-tab.xml",xml,Mode::IndentationTab)){
-		throw std::runtime_error("File save");
-	};
-	if(!save("test.01.indentation-4-spaces.xml",xml,Mode::Indentation4Spaces)){
+	if(!save("test.02.normal.xml",xml,Mode::Normal)){
 		throw std::runtime_error("File save");
 	};
 	printf("Done.\r\n");

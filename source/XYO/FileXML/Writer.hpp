@@ -18,6 +18,7 @@
 namespace XYO::FileXML {
 
 	XYO_FILEXML_EXPORT bool save(const char *fileName, Document *document, Mode mode = Mode::Normal);
+	// replaces output on success, leaves it unchanged on error
 	XYO_FILEXML_EXPORT bool saveToString(String &output, Document *document, Mode mode = Mode::Normal);
 
 };

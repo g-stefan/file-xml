@@ -8,72 +8,81 @@
 
 namespace XYO::FileXML {
 
-	Input::Input(size_t stackSize_) {
-		if (stackSize_ == 0) {
-			stackSize_ = 16384;
+	Input::Input(size_t readBufferSize_) {
+		if (readBufferSize_ == 0) {
+			readBufferSize_ = 65536;
 		};
 
 		iRead = nullptr;
-		stackSize = stackSize_;
+		stackSize = 64;
 		stackIndex = 0;
+		inputStack = new char[stackSize];
+		readBuffer = nullptr;
+		readBufferSize = readBufferSize_;
+		buffer = nullptr;
+		bufferIndex = 0;
+		bufferLength = 0;
+		streamEnd = false;
 		input = 0;
-		eof = false;
-		inputStack = new char[stackSize]();
-		fileIndex = 0;
+		eof = true;
 	};
 
 	Input::~Input() {
 		delete[] inputStack;
+		delete[] readBuffer;
 	};
 
 	void Input::setIRead(IRead *value) {
 		iRead = value;
+		if (!readBuffer) {
+			readBuffer = new char[readBufferSize];
+		};
+		buffer = readBuffer;
+		bufferIndex = 0;
+		bufferLength = 0;
+		streamEnd = (value == nullptr);
 	};
 
-	bool Input::push() {
-		if (stackIndex == stackSize) {
-			return false;
-		};
-		inputStack[stackIndex] = input;
-		++stackIndex;
-
-		--fileIndex;
-		return true;
+	void Input::setMemory(const char *value, size_t length) {
+		iRead = nullptr;
+		buffer = value;
+		bufferIndex = 0;
+		bufferLength = length;
+		streamEnd = true;
 	};
 
-	bool Input::pop() {
-		if (stackIndex == 0) {
-			return false;
+	void Input::pushBack(char value) {
+		if (!eof) {
+			if (stackIndex == stackSize) {
+				size_t newStackSize = stackSize * 2;
+				char *newInputStack = new char[newStackSize];
+				memcpy(newInputStack, inputStack, stackSize);
+				delete[] inputStack;
+				inputStack = newInputStack;
+				stackSize = newStackSize;
+			};
+			inputStack[stackIndex] = input;
+			++stackIndex;
 		};
-		--stackIndex;
-		input = inputStack[stackIndex];
-
-		++fileIndex;
-		return true;
+		input = value;
+		eof = false;
 	};
 
-	bool Input::read() {
-		if (stackIndex) {
-			return pop();
-		};
-		if (eof) {
-			input = 0;
-			return false;
-		};
-		if (iRead->read(&input, 1)) {
-			++fileIndex;
-			return true;
+	bool Input::readFromStream() {
+		if (!streamEnd) {
+			bufferLength = iRead->read(readBuffer, readBufferSize);
+			bufferIndex = 0;
+			if (bufferLength > 0) {
+				input = buffer[bufferIndex];
+				++bufferIndex;
+				eof = false;
+				return true;
+			};
+			streamEnd = true;
 		};
 		input = 0;
 		eof = true;
 		return false;
-	};
-
-	bool Input::isEof() {
-		if (stackIndex) {
-			return false;
-		};
-		return eof;
 	};
 
 };

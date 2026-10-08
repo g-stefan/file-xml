@@ -46,12 +46,13 @@ namespace XYO::FileXML {
 			inline void activeDestructor() {
 				attributes.activeDestructor();
 				name.activeDestructor();
+				branch.activeDestructor();
 				type = NodeType::None;
 			};
 
 			static inline void initMemory() {
 				String::initMemory();
-				TPointer<TDynamicArray<Attribute>>::initMemory();
+				TPointer<Attributes>::initMemory();
 			};
 	};
 

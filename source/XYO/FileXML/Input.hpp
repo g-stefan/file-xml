@@ -13,20 +13,29 @@
 
 namespace XYO::FileXML {
 
+	// Character input with block buffering and unlimited push back.
+	// 'input' is the current character, valid while isEof() is false.
 	class Input {
 			XYO_PLATFORM_DISALLOW_COPY_ASSIGN_MOVE(Input);
 
 		public:
 			TPointer<IRead> iRead;
+
 			char *inputStack;
 			size_t stackSize;
 			size_t stackIndex;
+
+			char *readBuffer;
+			size_t readBufferSize;
+			const char *buffer;
+			size_t bufferIndex;
+			size_t bufferLength;
+			bool streamEnd;
+
 			char input;
 			bool eof;
 
-			size_t fileIndex;
-
-			Input(size_t stackSize_ = 16384);
+			Input(size_t readBufferSize_ = 65536);
 			~Input();
 
 			inline operator char() {
@@ -43,11 +52,34 @@ namespace XYO::FileXML {
 			};
 
 			void setIRead(IRead *value);
+			// Read directly from memory, value must stay valid while reading
+			void setMemory(const char *value, size_t length);
 
-			bool push();
-			bool pop();
-			bool read();
-			bool isEof();
+			// Make value the current character, the current one (if any) will be read next
+			void pushBack(char value);
+
+			inline bool read() {
+				if (stackIndex) {
+					--stackIndex;
+					input = inputStack[stackIndex];
+					eof = false;
+					return true;
+				};
+				if (bufferIndex < bufferLength) {
+					input = buffer[bufferIndex];
+					++bufferIndex;
+					eof = false;
+					return true;
+				};
+				return readFromStream();
+			};
+
+			inline bool isEof() const {
+				return eof;
+			};
+
+		protected:
+			bool readFromStream();
 	};
 
 };

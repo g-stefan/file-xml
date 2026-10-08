@@ -8,14 +8,80 @@
 
 namespace XYO::FileXML {
 
+	static inline void documentPush(Document &document, Node *node) {
+		if (!document.root) {
+			document.root.newMemory();
+		};
+		document.root->pushToTail(node);
+	};
+
+	static inline bool documentHasAttributeValue(Node *node, const char *attribute, const char *value) {
+		if (!node->attributes) {
+			return false;
+		};
+		size_t length = node->attributes->length();
+		for (size_t index = 0; index < length; ++index) {
+			TPointer<Attribute> &attribute_(node->attributes->index(index));
+			if (attribute_) {
+				if (attribute_->name == attribute) {
+					if (attribute_->value == value) {
+						return true;
+					};
+				};
+			};
+		};
+		return false;
+	};
+
+	static void documentFind(Document::Branch *branch, const char *name, Document &retV) {
+		typename Document::Branch::Node *scan;
+		for (scan = branch->head; scan != nullptr; scan = scan->next) {
+			if (!scan->value) {
+				continue;
+			};
+			if (scan->value->type == NodeType::Element) {
+				if (scan->value->name == name) {
+					documentPush(retV, scan->value);
+				};
+				if (scan->value->branch) {
+					documentFind(scan->value->branch, name, retV);
+				};
+			};
+		};
+	};
+
+	static void documentFindWithAttributeValue(Document::Branch *branch, const char *name, const char *attribute, const char *value, Document &retV) {
+		typename Document::Branch::Node *scan;
+		for (scan = branch->head; scan != nullptr; scan = scan->next) {
+			if (!scan->value) {
+				continue;
+			};
+			if (scan->value->type == NodeType::Element) {
+				if (scan->value->name == name) {
+					if (documentHasAttributeValue(scan->value, attribute, value)) {
+						documentPush(retV, scan->value);
+					};
+				};
+				if (scan->value->branch) {
+					documentFindWithAttributeValue(scan->value->branch, name, attribute, value, retV);
+				};
+			};
+		};
+	};
+
 	void Document::addDocument(Document &document) {
 		if (document) {
 			if (!root) {
 				root.newMemory();
 			};
+			// document may share the same list, stop at its current tail
+			typename Branch::Node *last = document.root->tail;
 			typename Branch::Node *index;
 			for (index = document.root->head; index != nullptr; index = index->next) {
 				root->pushToTail(index->value);
+				if (index == last) {
+					break;
+				};
 			};
 		};
 	};
@@ -28,12 +94,12 @@ namespace XYO::FileXML {
 		};
 
 		for (scan = root->head; scan != nullptr; scan = scan->next) {
+			if (!scan->value) {
+				continue;
+			};
 			if (scan->value->type == NodeType::Element) {
 				if (scan->value->name == name) {
-					if (!retV.root) {
-						retV.root.newMemory();
-					};
-					retV.root->pushToTail(scan->value);
+					documentPush(retV, scan->value);
 				};
 			};
 		};
@@ -42,84 +108,18 @@ namespace XYO::FileXML {
 	};
 
 	Document Document::find(const char *name) {
-		typename Branch::Node *scan;
 		Document retV;
-		if (!root) {
-			return retV;
+		if (root) {
+			documentFind(root, name, retV);
 		};
-
-		for (scan = root->head; scan != nullptr; scan = scan->next) {
-			if (scan->value->type == NodeType::Element) {
-				if (scan->value->name == name) {
-					if (!retV.root) {
-						retV.root.newMemory();
-					};
-					retV.root->pushToTail(scan->value);
-				};
-
-				if (scan->value->branch) {
-					Document tmp(scan->value->branch);
-					Document list = tmp.find(name);
-					if (list) {
-						if (!retV.root) {
-							retV.root.newMemory();
-						};
-						typename Branch::Node *index;
-						for (index = list.root->head; index != nullptr; index = index->next) {
-							retV.root->pushToTail(index->value);
-						};
-					};
-				};
-			};
-		};
-
 		return retV;
 	};
 
 	Document Document::findWithAttributeValue(const char *name, const char *attribute, const char *value) {
-		typename Branch::Node *scan;
-
 		Document retV;
-		if (!root) {
-			return retV;
+		if (root) {
+			documentFindWithAttributeValue(root, name, attribute, value, retV);
 		};
-
-		for (scan = root->head; scan != nullptr; scan = scan->next) {
-			if (scan->value->type == NodeType::Element) {
-
-				if (scan->value->name == name) {
-					size_t index;
-					for (index = 0; index < scan->value->attributes->length(); ++index) {
-						TPointer<Attribute> &attribute_(scan->value->attributes->index(index));
-						if (attribute_) {
-							if (attribute_->name == attribute) {
-								if (attribute_->value == value) {
-									if (!retV.root) {
-										retV.root.newMemory();
-									};
-									retV.root->pushToTail(scan->value);
-								};
-							};
-						};
-					};
-				};
-
-				if (scan->value->branch) {
-					Document tmp(scan->value->branch);
-					Document list = tmp.findWithAttributeValue(name, attribute, value);
-					if (list) {
-						if (!retV.root) {
-							retV.root.newMemory();
-						};
-						typename Branch::Node *index;
-						for (index = list.root->head; index != nullptr; index = index->next) {
-							retV.root->pushToTail(index->value);
-						};
-					};
-				};
-			};
-		};
-
 		return retV;
 	};
 
@@ -141,6 +141,9 @@ namespace XYO::FileXML {
 	TPointer<Node> Document::getIndex(size_t index_) {
 		typename Branch::Node *scan;
 		size_t count_ = 0;
+		if (!root) {
+			return nullptr;
+		};
 		for (scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
 			if (count_ == index_) {
 				return scan->value;
@@ -152,6 +155,9 @@ namespace XYO::FileXML {
 	void Document::setIndex(size_t index_, Node *node) {
 		typename Branch::Node *scan;
 		size_t count_ = 0;
+		if (!root) {
+			return;
+		};
 		for (scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
 			if (count_ == index_) {
 				scan->value = node;
@@ -163,6 +169,9 @@ namespace XYO::FileXML {
 	void Document::removeIndex(size_t index_) {
 		typename Branch::Node *scan;
 		size_t count_ = 0;
+		if (!root) {
+			return;
+		};
 		for (scan = root->head; scan != nullptr; scan = scan->next, ++count_) {
 			if (count_ == index_) {
 				root->extractNode(scan);

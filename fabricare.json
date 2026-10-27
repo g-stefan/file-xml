@@ -1,6 +1,5 @@
 {
 	"solution": {
-		"namespace" : "xyo",
 		"name" : "file-xml",
 		"type" : "xyo-cpp",
 		"projects": [
